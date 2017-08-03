@@ -11,6 +11,11 @@ catkin_package(
 #  DEPENDS system_lib
 )
 
+find_package(Pylon QUIET)
+if (NOT ${Pylon_FOUND})
+    include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindPylon.cmake")
+endif()
+
 ###########
 ## Build ##
 ###########
@@ -21,6 +26,8 @@ SET( CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -Wl,-E")
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(include ${catkin_INCLUDE_DIRS} $ENV{PYLON_ROOT}/include $ENV{GENICAM_ROOT_V2_3}/library/CPP/include)
+include_directories(${Pylon_INCLUDE_DIRS})
+
 link_directories(
   $ENV{PYLON_ROOT}/lib64 
   $ENV{GENICAM_ROOT_V2_3}/bin/Linux64_x64
@@ -40,9 +47,10 @@ add_dependencies(basler_camera_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin
 target_link_libraries(basler_camera_node
   ${OpenCV_LIBS}
   ${catkin_LIBRARIES}
-  pylonbase
-  pylonutility
-  GCBase_gcc_v3_0_Basler_pylon_v5_0
-  GenApi_gcc_v3_0_Basler_pylon_v5_0
+  ${Pylon_LIBRARIES}
+  ##pylonbase
+  ##pylonutility
+  ##GCBase_gcc_v3_0_Basler_pylon_v5_0
+  ##GenApi_gcc_v3_0_Basler_pylon_v5_0
 ) 
 

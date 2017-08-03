@@ -1,0 +1,22 @@
+<launch>
+  <arg name="cam_right_calibration_file" default="file://$(find basler_camera)/config/right.yaml"/>
+  <arg name="cam_left_calibration_file" default="file://$(find basler_camera)/config/left.yaml"/>
+
+  <node ns="stereo_pair" name="right" pkg="basler_camera" type="basler_camera_node" output="screen">
+    <param name="frame_rate" type="int" value="10" />
+    <param name="frame_id" type="string" value="right" />
+    <param name="camera_info_url" type="string" value="$(arg cam_right_calibration_file)" />
+    <param name="serial_number" type="string" value="22142316"/>
+    <rosparam command="load" file="$(find basler_camera)/config/sync_slave.yaml"/>
+  </node>
+
+  <node ns="stereo_pair" name="left" pkg="basler_camera" type="basler_camera_node" output="screen" >
+    <param name="frame_rate" type="int" value="10" />
+    <param name="frame_id" type="string" value="left" />
+    <param name="camera_info_url" type="string" value="$(arg cam_left_calibration_file)" />
+    <param name="serial_number" type="string" value="21483471"/>
+    <rosparam command="load" file="$(find basler_camera)/config/sync_master.yaml"/>
+  </node>
+
+</launch>
+  

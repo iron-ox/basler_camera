@@ -1,0 +1,49 @@
+basler_params:
+  -
+    name: AcquisitionFrameRateAbs
+    type: float
+    value: 5.0
+  -
+    name: ExposureTimeAbs
+    type: float
+    value: 100000.0
+  -
+    name: AcquisitionMode
+    type: enum
+    value: Continuous
+  -
+    name: BalanceWhiteAuto
+    type: enum
+    value: 'Once'
+  -
+    name: TriggerMode
+    type: enum
+    value: 'On'
+  -
+    name: LineSelector
+    type: enum
+    value: Line1
+  -
+    name: TriggerSource
+    type: enum
+    value: Line1
+  -
+    name: LineMode
+    type: enum
+    value: Input
+  -
+    name: TriggerSelector
+    type: enum
+    value: AcquisitionStart 
+  -
+    name: TriggerActivation
+    type: enum
+    value: RisingEdge
+  -
+    name: GevSCPSPacketSize
+    type: int
+    value: 8192
+  -
+    name: GevSCPD
+    type: int
+    value: 50000
