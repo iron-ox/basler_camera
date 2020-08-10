@@ -13,6 +13,7 @@ namespace
 {
 const int load_camera_timeout = 5;
 const int ptp_sync_timeout = 60;
+const int startup_sleep_s = 5;
 }
 
 std::vector<Pylon::CBaslerGigEInstantCamera> loadCameras(const XmlRpc::XmlRpcValue& cameras_yaml)
@@ -280,12 +281,21 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    ROS_INFO("All %zu cameras synced. Starting image capture.", cameras.size());
+    ROS_INFO("All %zu cameras synced. Starting image capture in %d seconds...", cameras.size(), startup_sleep_s);
     for (auto& camera : cameras)
     {
         enableSyncFreeRun(camera, frame_rate);
-        camera.StartGrabbing();
+        // With LatestImageOnly, each incoming buffer overwrites previous buffers, so RetrieveResult calls only return the latest frame.
+        // There shouldn't be any dropped frames, since we call RetrieveResult continuously in a loop below.
+        camera.StartGrabbing(Pylon::GrabStrategy_LatestImageOnly);
     }
+
+    // For some reason, our networking hardware seems to have trouble handling the sudden increase in traffic upon starting capture,
+    // resulting in incomplete buffers for a few seconds. So we sleep here, until the stream stabilizes. LatestImageOnly means that
+    // the initial incomplete buffers will be flushed out. The OnImagesSkipped callback will be triggered though.
+    ros::Duration(startup_sleep_s).sleep();
+
+    ROS_INFO("Starting image capture from %zu cameras.", cameras.size());
 
     Pylon::CGrabResultPtr grab_result;
     while (ros::ok())

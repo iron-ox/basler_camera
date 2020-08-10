@@ -31,7 +31,7 @@ namespace Pylon
 
     virtual void OnImagesSkipped( CInstantCamera& camera, size_t countOfSkippedImages)
     {
-      ROS_ERROR_STREAM (countOfSkippedImages  << " images have been skipped.");
+      ROS_INFO_STREAM (countOfSkippedImages  << " images have been skipped.");
     }
 
     virtual void OnImageGrabbed( CInstantCamera& camera, const CGrabResultPtr& ptrGrabResult)
